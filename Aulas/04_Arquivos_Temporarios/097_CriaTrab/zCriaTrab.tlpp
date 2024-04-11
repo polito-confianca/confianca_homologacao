@@ -1,0 +1,57 @@
+/*/{Protheus.doc} nomeStaticFunction
+    (Descrição)
+    @Tipo  Static Function
+    @Autor Pablo Polito
+    @Data de Criação 10/04/2024
+    @Versão 1.0
+    @Exemplos
+    (Exemplos)
+    @Links de Referencias (links_or_references)
+    @Histórico de Alterações
+    10/04/2024, Pablo Polito, description
+/*/
+#Include "TOPCONN.ch"
+#Include "TOTVS.ch"
+
+Function U_zCriaTrab
+    Local aCampos as array
+
+    rpcSetEnv("99","01")
+
+    aCampos := {{"CODIGO","C",6,0},{"LOJA","C",2,0},{"NOME","C",30,0}} //Cria campos para usar no arquivo temporario
+    cArqTrab := criatrab(aCampos,.T.) //Cria area de trabalho, adicionando os campos criados 
+    DbUseArea(.T.,,cArqTrab,cArqTrab,.T.,.F.) //Usa a area de trabalho com o mesmo nome do alias, indicando se será compartilhado e se é apenas leitura
+    DbCreateIndex(cArqTrab+"1","CODIGO+LOJA+NOME",{||CODIGO+LOJA+NOME}) //Cri o index da area de trabalho
+    DbSetIndex(cArqTrab+"1") //Posiciona no indice
+
+    SRA->(DbSetOrder(1))
+    
+    While .Not. SRA->(Eof)
+        ReckLock(cArqTrab,.T.)
+            CODIGO  := SRA->RA_MAT
+            LOJA    := SRA->RA_LOJA
+            NOME    := SRA->RA_NOME
+        MsUnlock()
+
+        SRA->(DbSkip)
+    EndDo
+
+    DbSelectArea('SA2')
+    DbSetOrder(2)
+
+    While .Not. Eof()
+        (cArqTrab)->(ReckLock(cArqTrab,.T.))
+            (cArqTrab)->CODIGO := A2_COD
+            (cArqTrab)->LOJA := A2_LOJA
+            (cArqTrab)->NOME := A2_NOME
+        (cArqTrab)->(MsUnlock())
+    EndDo
+
+    (cArqTrab)->(DbCloseArea())
+
+    If File("\system\", + cArqTrab + ".dtc")
+        FErase("\system\", + cArqTrab + ".dtc")
+    EndIf
+
+    rpcClearEnv()
+Return 

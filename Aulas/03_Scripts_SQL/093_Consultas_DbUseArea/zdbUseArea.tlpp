@@ -1,0 +1,35 @@
+/*/{Protheus.doc} nomeStaticFunction
+    (Descrição)
+    @Tipo  Static Function
+    @Autor Pablo Polito
+    @Data de Criação 09/04/2024
+    @Versão 1.0
+    @Exemplos
+    (Exemplos)
+    @Links de Referencias (links_or_references)
+    @Histórico de Alterações
+    09/04/2024, Pablo Polito, description
+/*/
+
+#Include "TopConn.ch"
+#Include "TOTVS.ch"
+
+Function  zDbUseArea()
+    Local cSql as character
+    Local aDados as array
+    
+    rpcSetEnv("99","01")
+
+    cSql := "SELECT RA_FILIAL, RA_MAT FROM SRA990 WHERE D_E_L_E_T_" //Cria o select para ser executado
+
+    DbUseArea(.T.,"TOPCONN",TcGenQry(,,"SRA"),"QRY",.T.,.F.) //.T. = É area de trabalho nova?, "TOPCONN" = Em qual driver vou armazenar a consulta, TcGenQry() = Função para abre uma query de uma tabela no banco, usada em conjunto com dbusearea, "QRY" = Nome da area de trabalho, 
+
+    While .Not. QRY->(Eof())
+        QRY->(aadd(aDados,{RA_FILIAL, RA_MAT}),DbSkip())
+    EndDo
+
+    QRY->(DbCloseArea())
+
+    rpcClearEnv()
+    
+Return 

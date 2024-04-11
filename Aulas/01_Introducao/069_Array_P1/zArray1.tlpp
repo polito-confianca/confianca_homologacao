@@ -1,0 +1,24 @@
+/*/{Protheus.doc} nomeStaticFunction
+    Definindo como pode ser um tipo de array
+    @Tipo  Static Function
+    @Autor Pablo Polito
+    @Data de Criação 05/04/2024
+    @Versão 1.0
+    
+    @Exemplos
+    (Exemplos)
+    
+    @Links de Referencias (links_or_references)
+    
+    @Histórico de Alterações
+    05/04/2024, Pablo Polito, description
+/*/
+Function zArray1()
+    Local aArray1 := {} as array
+    Local aArray2 := {'1','2',3,nil,.T.,{|cTexto,cTitulo|fwAlertInfo(cTexto,cTitulo)}} as array
+    Local aArray3 := array(0) as array
+    Local aArray4 := array(2) as array
+    Local aArray5 := array(1,{cVar,cVar2,cVar3}) as array //Multidimencional
+    Local aArray6 := array({cVar4,cVar5,cVar6},{'5','6','7'}) as array //Matriz
+
+Return 

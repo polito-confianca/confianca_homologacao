@@ -1,0 +1,29 @@
+/*/{Protheus.doc} nomeStaticFunction
+    (Descrição)
+    @Tipo  Static Function
+    @Autor Pablo Polito
+    @Data de Criação 08/04/2024
+    @Versão 1.0
+
+    @Exemplos
+    (Exemplos)
+
+    @Links de Referencias 
+    (links_or_references)
+
+    @Histórico de Alterações
+    08/04/2024, Pablo Polito, description
+/*/
+#Include 'TOTVS.ch'
+
+Function U_zSetOrder()
+    rpcSetEnv('99','01') //Prepara um ambiente para utilizazção
+
+    DbSelectArea('SA1') //Coloca a tabela na area de trabalho ativa
+
+    DbSetOrder(2) //Ordena o indice para o indice 2
+
+    SA1->(DbSetOrder(3), dbSeek('  000001'),A1_NOME) //Ordena o registro a area de trabalho, estando ativa ou não, posiciona em um determinado registro e trás o campo NOME
+
+    rpcClearEnv() //Fecha a area de trabalho ativa
+Return 

@@ -1,0 +1,61 @@
+/*/{Protheus.doc} U_Reference
+    Passagem de variavel por referencia
+    @Tipo  Static Function
+    @Autor Pablo Polito
+    @Data de Criação 04/04/2024
+    @Versão 1.0
+    
+    @Exemplos
+    (Exemplos)
+    
+    @Links de Referencias (links_or_references)
+    
+    @Histórico de Alterações
+    04/04/2024, Pablo Polito, description
+/*/
+
+
+Function U_TRef()
+    Local nVarNumero as numeric
+    Local nVarNumero2 as numeric
+    Local nVarNumero3 as numeric
+
+    nVarNumero := 10 //Atribuo um valor a variavel que inicialmente está como 4
+    nVarNumero2 := 5 //Atribuo um valor a variavel que vai ser usada posteriormente
+
+    nCalc := Calculo(@nVarNumero,nVarNumero2) //
+
+    While nVarNumero > nVarNumero2
+        nVarNumero--
+        
+        If nVarNumero = 10
+            Alert("É igual a 10")
+            nVarNumero := 7
+            Loop
+        EndIf
+
+        Alert(nVarNumero)
+    EndDo
+
+    For nVarNumero3 := 1 To nVarNumero
+
+
+        If nVarNumero2 = 3
+            nVarNumero2 := 2
+            Loop
+        EndIf
+        
+        nVarNumero2--
+
+        Alert(nVarNumero2)
+        Alert(nVarNumero3)
+    Next
+    
+
+
+Return
+
+
+Static Function Calculo(n1,n2)
+    n1 := n1 + n2
+Return n1

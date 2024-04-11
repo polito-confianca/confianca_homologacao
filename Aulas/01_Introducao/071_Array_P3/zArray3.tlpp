@@ -1,0 +1,89 @@
+/*/{Protheus.doc} nomeStaticFunction
+    Adicionando conteudos aos arrays
+
+    @Tipo  Static Function
+    @Autor Pablo Polito
+    @Data de Criação 05/04/2024
+    @Versão 1.0
+    
+    @Exemplos
+    (Exemplos)
+    
+    @Links de Referencias (links_or_references)
+    
+    @Histórico de Alterações
+    05/04/2024, Pablo Polito, description
+/*/
+Function U_zArray3()
+    Local cVar,cVar2,cVar3,cVar4,cVar5,cVar6 as numeric
+    Local aArray1 := {} as array
+    Local aArray2 := {'1','2',3,nil,.T.,{|cTexto,cTitulo|fwAlertInfo(cTexto,cTitulo)}} as array 
+    Local aArray3 := array(0) as array
+    Local aArray4 := array(2) as array
+    Local aArray5 := array(1,{cVar,cVar2,cVar3}) as array
+    Local aArray6 := {{1,2,3},{'5','6','7'}} as array   //Matriz
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    //Esse bloco adiciona mais 3 posições no array
+    //Adiciona 1 a posição 1
+    aadd(aArray1,1) 
+    //Adiciona 2 a posição 2
+    aadd(aArray1,2)
+    //Adiciona 'teste' a posição 3
+    aadd(aArray1,"teste") 
+
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //Adiciona ao array aArra2 na posição 7         +1 array de 4 posições na posição 7 do aArray2     Sendo a ultima posição +1 array de 2 posicões
+    aadd(aArray2,                                       {'1',2,'3',                                         {"teste1","teste2"}}) //Array multidimencional, por ter mais arrays dentro dele
+    //Ex: aadd(aArray2,{'1',2,'3',{"teste1","teste2"}})
+
+    //Adiciona ao array aArray4 na posição 1     O conteudo 'Ola" 
+    aArray4[1]                                   := 'Ola'
+    //Ex: aArray4[1] := 'Ola'           
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    /*
+    Explicação da atribuição do aArray3
+    
+    1. Array vazio (0 posições)
+    -------------
+    
+    -------------
+
+    2.Recebeu 4 posições por 4 aadd diferentes
+    ------------------
+    |   |   |   |   |
+    ------------------
+
+    3.Adicionado um array a cada posição adicionada pelos aadd
+    ---------------------
+    | [] | [] | [] | [] |
+    ---------------------
+
+    4.Sendo cada array adicionado com 2 posições dentro
+    -----------------------------------------------------------------
+    | [1,'Opção 1'] | [2,'Opção 2'] | [4,'Opção 4'] | [3,'Opção 3'] |
+    -----------------------------------------------------------------
+
+    */
+    aadd(aArray3,{1,'Opção 1'})  
+    aadd(aArray3,{2,'Opção 2'})
+    aadd(aArray3,{3,'Opção 4'})
+    aadd(aArray3,{4,'Opção 5'})
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    //Para atribuir um valor a um array dentro do array principal
+
+    //Indicico qual array quero alterar     Qual posição do array quero alterar         De qual posição do array de dentro      Atribuindo um valor
+    aArray3                                 [4,                                         1]                                      := 3
+    //Ex: aArray3[4,1] := 3
+
+    //Indicico qual array quero alterar     Qual posição do array quero alterar         De qual posição do array de dentro      Atribuindo um valor
+    aArray3                                 [4]                                         [2]                                     := 'Modificação'
+    //Ex: aArray3[4][2] := 3
+    
+Return 

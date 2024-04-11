@@ -1,0 +1,46 @@
+/*/{Protheus.doc} nomeStaticFunction
+    (Descrição)
+    @Tipo  Static Function
+    @Autor Pablo Polito
+    @Data de Criação 10/04/2024
+    @Versão 1.0
+
+    @Exemplos
+    (Exemplos)
+
+    @Links de Referencias (links_or_references)
+
+    @Histórico de Alterações
+    10/04/2024, Pablo Polito, description
+/*/
+
+#Include "TOTVS.ch"
+#Include "TopConn.ch"
+
+Function U_zFwTemps()
+    Local oTempTable as object
+    Local cAliasTemp as character
+    Local cRealname as character
+    Local aCampos as array
+
+    rpcSetEnv("99","01")
+    
+    cAliasTemp := "TRBSA1SA2"
+    oTempTable := FwTemporaryTable():new(cAliasTemp)
+    oTempTable:setFields({{"CODIGO","C",6,0},{"FILIAL","C",2,0},{"NOME","C",30,0}})
+    oTempTable:addIndex("IND_1",{"CODIGO","FILIAL","NOME"})
+    oTempTable:create()
+
+    cRealname := oTempTable:getRealName()
+
+    DbSelectArea("SRA")
+    DbSetOrder(1)
+
+    while .Not. Eof()
+        (cAliasTemp)->(RecLock(alias(),.T.), CODIGO := SRA->RA_MAT, FILIAL := SRA->RA_FILIAL, NOME := SRA->RA_NOME, MsUnlock())
+        DbSkip()
+    EndDo
+
+    rpcClearEnv()
+
+Return 

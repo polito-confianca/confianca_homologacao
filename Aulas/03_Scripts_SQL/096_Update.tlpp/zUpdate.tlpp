@@ -1,0 +1,35 @@
+/*/{Protheus.doc} U_zEmbededSQL
+    (Descrição)
+    @Tipo  Static Function
+    @Autor Pablo Polito
+    @Data de Criação 10/04/2024
+    @Versão 1.0
+
+    @Exemplos
+    (Exemplos)
+
+    @Links de Referencias (links_or_references)
+
+    @Histórico de Alterações
+    10/04/2024, Pablo Polito, Construção da função
+/*/
+
+#Include "TopConn.ch"
+#Include "Totvs.ch"
+Function U_zUpdate()
+    Local cSql as character
+    Local nSql as numeric
+
+    rpcSetEnv("99","01")
+        cSQl := "UPDATE " + retSqlName("SRA")
+        cSql += CRLF + "SET D_E_L_E_T_ = ' ' "
+        cSql += CRLF + "WHERE D_E_L_E_T_ = '*' "
+
+        nSql := TcSqlExec(cSql)
+
+        If nSql < 0
+            TcAlertError(TcSqlErro(),"ERRO CONSULTA SQL")
+        EndIf 
+        
+    rpcClearEnv()
+Return 

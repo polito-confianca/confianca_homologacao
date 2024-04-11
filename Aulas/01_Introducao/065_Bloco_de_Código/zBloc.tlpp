@@ -1,0 +1,41 @@
+/*/{Protheus.doc} nomeStaticFunction
+    Função para exemplificar blocos de código
+    @Tipo  Static Function
+    @Autor Pablo Polito
+    @Data de Criação 05/04/2024
+    @Versão 1.0
+    
+    @Exemplos
+    (Exemplos)
+    
+    @Links de Referencias (links_or_references)
+    
+    @Histórico de Alterações
+    05/04/2024, Pablo Polito, description
+/*/
+
+Function U_Bloc()
+    Local bBloco := {|cTexto,cTitulo|fwAlertInfo(cTexto,cTitulo)} as codeblock
+
+    executar(bBloco,"Texto de exemplo", "Titulo")
+Return 
+
+Static Function Executar(xParam as variadic)
+    Local nNumero1 as numeric
+    Local nNumero2 as numeric
+    Local x as numeric
+
+    nNumero1 := 10
+    nNumero2 := 2
+    
+    For x := 1 to nNumero1 
+        nNumero2++
+        Alert(nNumero2)
+        
+        If nNumero2 == 8
+            eval(xParam:vArgs[1],xParam:vArgs[2],,xParam:vArgs[3],)            
+        EndIf
+    Next
+
+    
+Return 

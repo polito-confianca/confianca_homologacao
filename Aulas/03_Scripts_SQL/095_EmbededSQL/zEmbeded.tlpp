@@ -1,0 +1,36 @@
+/*/{Protheus.doc} U_zEmbededSQL
+    (Descrição)
+    @Tipo  Static Function
+    @Autor Pablo Polito
+    @Data de Criação 10/04/2024
+    @Versão 1.0
+
+    @Exemplos
+    (Exemplos)
+
+    @Links de Referencias (links_or_references)
+
+    @Histórico de Alterações
+    10/04/2024, Pablo Polito, Construção da função
+/*/
+
+#Include "TopConn.ch"
+#Include "Totvs.ch"
+Function U_zEmbededSQL()
+    Local aDados as array
+
+    rpcSetEnv("99","01")
+
+    aDados := array(0)
+    
+    BeginSQL Alias "QRY"
+        SELECT RA_FILIAL, RA_MAT
+        FROM %table:SRA% SRA
+        WHERE SRA.%notdel%
+        AND RA_FILIAL - %Filial:SRA%
+    EndSQL
+
+    QRY->(dbEval({|| aadd(aDados,{RA_FILIAL, RA_MAT})}))
+
+    rpcClearEnv()
+Return 

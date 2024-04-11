@@ -1,0 +1,40 @@
+/*/{Protheus.doc} nomeStaticFunction
+    (Descrição)
+    @Tipo  Static Function
+    @Autor Pablo Polito
+    @Data de Criação 08/04/2024
+    @Versão 1.0
+    @Exemplos
+    (Exemplos)
+    @Links de Referencias (links_or_references)
+    @Histórico de Alterações
+    08/04/2024, Pablo Polito, description
+/*/
+#Include 'TOTVS.ch'
+
+Function zIndexOrder()
+    rpcSetEnv('99','01')
+
+    DbSelectArea('SA1')
+    DbSetOrder(2)
+    
+    SA1->(DbSetOrder(1),DbSeek('  000001'),A1_NOME)
+
+    RetOrder('SA1','A1_FILIAL+A1_NOME+A1_LOJA') //Retorna o numero da chave do indice que é composto por esses campos
+    DbSetOrder(RetOrder('SA1','A1_FILIAL+A1_NOME+A1_LOJA')) //E caso eu queira posicionar em um indice que eu não lembro qual é a chave, essa sintaxe também funciona
+
+
+    //Também é possivel realizar da seguinte maneira
+    SA1->(DbSetOrder(RetOrder('SA1','A1_FILIAL+A1_NOME+A1_LOJA')),DbSeek('  000001'),A1_NOME)
+
+
+    rpcClearEnv()
+
+    /*
+        Para verificar os campos que contemplam um indice caso não se lembre, existe o comando passado direto no depurador, sendo: 
+        IndexKey(1)
+        -Retorno
+        A1_FILIAL+A1_NOME+A1_LOJA
+    
+    */
+Return 

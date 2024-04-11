@@ -1,0 +1,34 @@
+/*/{Protheus.doc} zTcQuery
+    (Descrição)
+    @Tipo  Static Function
+    @Autor Pablo Polito
+    @Data de Criação 10/04/2024
+    @Versão 1.0
+
+    @Exemplos
+    (Exemplos)
+
+    @Links de Referencias (links_or_references)
+
+    @Histórico de Alterações
+    10/04/2024, Pablo Polito, Construção do programa inicial
+/*/
+#Include "TopConn.ch"
+#Include "Totvs.ch"
+
+Function U_zTQuery()
+    Local cSql as character
+    Local aDados as array
+
+    rpcSetEnv("99","01")
+
+    aDados := array(0)
+
+    cSql := "SELECT RA_FILIAL, RA_MAT FROM SRA010 WHERE D_E_L_E_T_"
+    
+    TcQuery cSql new alias QRY
+    
+    QRY->(dbEval({||aadd(aDados,{RA_FILIAL, RA_MAT})}))
+
+    rpcClearEnv()
+Return 
