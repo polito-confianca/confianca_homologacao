@@ -15,21 +15,17 @@
 #Include "TOTVS.ch"
 
 Function  zDbUseArea()
-    Local cSql as character
-    Local aDados as array
-    
     rpcSetEnv("99","01")
+        cSql := "SELECT RA_FILIAL, RA_MAT, RA_NOME FROM SRA010 WHERE D_E_L_E_T_"
+                //Nova area de trabalho   //Em qual local temporario a tabla fica armazenada      //Desuso os dois primeiros, Resultado da consulta        //Nome da consulta temporaria    //Será compartilhada?    //Será somenta leitura?
+        DbUseArea(.T.,                    "TOPCONN",                                             TcGenQry(,,cSql),                                         "QRY",                           .T.,                    .F.)
 
-    cSql := "SELECT RA_FILIAL, RA_MAT FROM SRA990 WHERE D_E_L_E_T_" //Cria o select para ser executado
+        //TcSetField("QRY","RA_ADMIS","D",8,0) Converte o dado para data
 
-    DbUseArea(.T.,"TOPCONN",TcGenQry(,,"SRA"),"QRY",.T.,.F.) //.T. = É area de trabalho nova?, "TOPCONN" = Em qual driver vou armazenar a consulta, TcGenQry() = Função para abre uma query de uma tabela no banco, usada em conjunto com dbusearea, "QRY" = Nome da area de trabalho, 
+        While .NOT. QRY->(Eof())
+            QRY->(aadd(aDados,{RA_FILIAL,RA_MAT,RA_NOME}),DbSkip())
+        EndDo
 
-    While .Not. QRY->(Eof())
-        QRY->(aadd(aDados,{RA_FILIAL, RA_MAT}),DbSkip())
-    EndDo
-
-    QRY->(DbCloseArea())
-
+        QRY->(DbCloseArea())
     rpcClearEnv()
-    
 Return 

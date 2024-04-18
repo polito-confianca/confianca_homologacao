@@ -21,12 +21,12 @@ Function U_zCriaTrab
     aCampos := {{"CODIGO","C",6,0},{"LOJA","C",2,0},{"NOME","C",30,0}} //Cria campos para usar no arquivo temporario
     cArqTrab := criatrab(aCampos,.T.) //Cria area de trabalho, adicionando os campos criados 
     DbUseArea(.T.,,cArqTrab,cArqTrab,.T.,.F.) //Usa a area de trabalho com o mesmo nome do alias, indicando se será compartilhado e se é apenas leitura
-    DbCreateIndex(cArqTrab+"1","CODIGO+LOJA+NOME",{||CODIGO+LOJA+NOME}) //Cri o index da area de trabalho
+    DbCreateIndex(cArqTrab+"1","CODIGO+LOJA+NOME",{||CODIGO+LOJA+NOME}) //Cria o index da area de trabalho
     DbSetIndex(cArqTrab+"1") //Posiciona no indice
 
     SRA->(DbSetOrder(1))
     
-    While .Not. SRA->(Eof)
+    While .Not. SRA->(Eof())
         ReckLock(cArqTrab,.T.)
             CODIGO  := SRA->RA_MAT
             LOJA    := SRA->RA_LOJA

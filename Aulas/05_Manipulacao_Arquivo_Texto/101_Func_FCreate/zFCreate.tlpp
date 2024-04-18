@@ -1,0 +1,93 @@
+/*/{Protheus.doc} zFCreate
+    (Descrição)
+    @Tipo  Static Function
+    @Autor Pablo Polito
+    @Data de Criação 16/04/2024
+    @Versão 1.0
+
+    @Exemplos
+    (Exemplos)
+
+    @Links de Referencias (links_or_references)
+    
+    @Histórico de Alterações
+    16/04/2024, Pablo Polito, description
+/*/
+
+#Include "TOTVS.ch"
+Function U_zFCreate()
+    Local cSaveFile as character
+    Local nArquivo as numeric
+    Local cHead as character
+    Local nHead as numeric
+    Local nWrite as numeric
+
+    rpcSetEnv("99","01")
+
+    cSaveFile := "C:\TOTVS\Temp\file.txt"
+
+    //Valida se o arquivo já existe e se existir, apaga
+    If File(cSaveFile)
+        fErase(cSaveFile) 
+    EndIf
+
+    nArquivo := fCreate(cSaveFile) //Cria o arquivo com o nome e caminho definido em cSaveFile
+
+    If nArquivo < 0 //Valida se o arquivo foi criado corretamente, e se não tiver sido criado, mostra um código de erro pela funcao fError()
+        FwAlertInfo("Erro ao criar arquivo." + CRLF + "CODIGO DO ERRO: " + Str(fError(),4),"Erro")
+        rpcClearEnv()
+        Return .F.
+    EndIf
+
+    cHead := padr("TABELA",10) + padr("MATRICULA",12) + padr("FILIAL",10) + padr("NOME",40)  //Guarda um conteudo do cabecalho do que eu quero escrever
+    nHead := Len(cHead) //Retorna a quantidade de caracteres 
+    nWrite := fWrite(nArquivo,cHead) //Grava o arquivo, retornando a quantidade de caracteres gravados na variavel nWrite
+
+    //Se ocorrer um erro na gravacao do arquivo, ou seja, se o retorno da quantidade de caracteres da uncao fWrite, for diferente da quantidade reservada, então teve erro
+    If nWrite <> nHead
+        FwAlertInfo("Erro ao efetuar gravacao no arquivo" + CRLF + "CODIGO DO ERRO: " + Str(fError(),4),"Erro")
+        fClose(nArquivo) //Encerra o arquivo
+        rpcClearEnv()
+        Return .F.
+    EndIf
+
+    cHead := CRLF + StrTran(space(69)," ","-") //Grava +1 linha substituindo a quantidade de espacos por ifen
+    nHead := Len(cHead) //Retorna a quantidade de caracteres 
+    nWrite := fWrite(nArquivo,cHead) //Grava o arquivo, retornando a quantidade de caracteres gravados na variavel nWrite
+
+    //Se ocorrer um erro na gravacao do arquivo, ou seja, se o retorno da quantidade de caracteres da uncao fWrite, for diferente da quantidade reservada, então teve erro
+    If nWrite <> nHead
+        FwAlertInfo("Erro ao efetuar gravacao no arquivo" + CRLF + "CODIGO DO ERRO: " + Str(fError(),4),"Erro")
+        fClose(nArquivo) //Encerra o arquivo
+        rpcClearEnv()
+        Return .F.
+    EndIf
+
+    //Vai gravar no meu bloco de código as variaveis do alias SRA
+    bBloco := {||cHead := CRLF +;
+                          padr(Alias(),10) +;
+                          padr(RA_MAT,12) +;
+                          padr(RA_FILIAL,10) +; 
+                          padr(Left(RA_NOME,25),25),;
+                          fWrite(nArquivo,cHead)}
+
+    SRA->(DbEval(bBloco)) //Vai passar linha a linha do alias SRA, executando o bloco de código acima que contem a funcao de gravacao de dados no arquivo
+
+    cHead := CRLF + StrTran(space(69)," ","-") //Grava +1 linha substituindo a quantidade de espacos por ifen
+    nWrite := fWrite(nArquivo,cHead) //Grava o arquivo, retornando a quantidade de caracteres gravados na variavel nWrite
+
+    //Vai gravar no meu bloco de código as variaveis do alias SRA
+    bBloco := {||cHead := CRLF +;
+                          padr(Alias(),10) +;
+                          padr(RD0_CODIGO,12) +;
+                          padr(RD0_FILIAL,10) +;
+                          padr(Left(RD0_NOME,25),25) ,;
+                          fWrite(nArquivo,cHead)} 
+
+    RD0->(DbEval(bBloco)) //Vai passar linha a linha do alias SRA, executando o bloco de código acima que contem a funcao de gravacao de dados no arquivo
+
+
+    fClose(nArquivo) //Fecha o arquivo
+
+    rpcClearEnv()
+Return 

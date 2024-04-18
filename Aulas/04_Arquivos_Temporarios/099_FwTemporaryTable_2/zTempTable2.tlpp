@@ -49,6 +49,9 @@ Function U_zTempTable2()
 
     lArq := memoWrite(cArquivo,cTxt)
 
+    (cAliasTemp)->(DbCloseArea())
+    oTempTable:delete()
+    
     rpcClearEnv()
 
 Return 

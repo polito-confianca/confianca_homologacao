@@ -1,0 +1,32 @@
+/*/{Protheus.doc} zFwFileWriter
+    (Descrição)
+    @Tipo  Static Function
+    @Autor Pablo Polito
+    @Data de Criação 16/04/2024
+    @Versão 1.0
+
+    @Exemplos
+    (Exemplos)
+
+    @Links de Referencias (links_or_references)
+
+    @Histórico de Alterações
+    16/04/2024, Pablo Polito, description
+/*/
+Function U_zFwFileWriter()
+    Local cSaveFile as character
+    Local lExistFile as logical
+    Local oArqTxt as object
+
+    rpcSetEnv("99","01")
+
+    cSaveFile := "C:\TOTVS\Temp\file.txt"
+    lExistFile := File(cFile)
+    oArqTxt := FwFileWriter():new(cSaveFile,.F.)
+
+    If lExistFile
+        oArqTxt:open(2)
+    EndIf
+
+    rpcClearEnv()
+Return 
