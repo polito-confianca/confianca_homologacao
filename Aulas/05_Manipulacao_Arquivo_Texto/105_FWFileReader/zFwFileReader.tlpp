@@ -1,0 +1,36 @@
+/*/{Protheus.doc} nomeStaticFunction
+    (Descrição)
+    @Tipo  Static Function
+    @Autor Pablo Polito
+    @Data de Criação 18/04/2024
+    @Versão 1.0
+    @Exemplos
+    (Exemplos)
+    @Links de Referencias (links_or_references)
+    @Histórico de Alterações
+    18/04/2024, Pablo Polito, description
+/*/
+Function U_zFwFileReader()
+    Local oFile as object
+    Local cArquivo as character
+    Local cBuffer as character
+    Local cTexto as character
+
+    cArquivo := "C:\TOTVS\Temp\file.csv"
+
+    oFile := FwFileReader():new(cArquivo)
+    lOpen := oFile:FOpen()
+
+    If lOpen
+        While .Not. oFile:Eof()
+            cBuffer := oFile:getLine()
+            cTexto += If(empty(cTexto),"",CRLF) + cBuffer
+        EndDo
+    Else
+        FwAlertInfo(oFile:error():message,"Falha ao abrir o arquivo")
+        rpcClearEnv()
+        Return .F.
+    EndIf
+
+    
+Return 
