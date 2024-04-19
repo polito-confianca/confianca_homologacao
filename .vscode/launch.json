@@ -1,0 +1,70 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"type": "totvs_language_debug",
+			"request": "launch",
+			"name": "TOTVS Language Debug",
+			"program": "${command:AskForProgramName}",
+			"cwb": "${workspaceFolder}",
+			"smartclientBin": "C:/TOTVS/Protheus2310/Protheus/bin/smartclient/smartclient.exe",
+			"isMultiSession": true,
+			"enableTableSync": true,
+			"extendFeatures": {
+				"charDetails": false
+			}
+		}
+	],
+	"lastPrograms": [
+		{
+			"label": "U_TEST003"
+		},
+		{
+			"label": "U_TipoVar"
+		},
+		{
+			"label": "U_zReference"
+		},
+		{
+			"label": "U_TRef"
+		},
+		{
+			"label": "U_Bloc"
+		},
+		{
+			"label": "U_zArray2"
+		},
+		{
+			"label": "U_zArray3"
+		},
+		{
+			"label": "U_zArray5"
+		},
+		{
+			"label": "U_zSetOrder"
+		},
+		{
+			"label": "U_zDbUseArea"
+		},
+		{
+			"label": "U_zCriaTrab"
+		},
+		{
+			"label": "U_zFwTempTable"
+		},
+		{
+			"label": "U_zFwTemps"
+		},
+		{
+			"label": "U_zFCreate"
+		},
+		{
+			"label": "U_zMacro"
+		},
+		{
+			"label": "U_zFOpen"
+		}
+	],
+	"lastProgramExecuted": "U_zFOpen",
+	"lastProgramArguments": []
+}

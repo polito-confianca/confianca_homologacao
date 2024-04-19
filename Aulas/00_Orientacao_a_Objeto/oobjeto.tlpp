@@ -1,0 +1,8 @@
+#Include "TOTVS.CH"
+
+Function U_oObjeto()
+    Local oAlert := oDlg():alert()
+    
+    Local cInfo := oAlert:piscavermelho()
+    
+Return oAlert

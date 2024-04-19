@@ -1,0 +1,21 @@
+class oDlg
+    data titulo 
+    data texto
+
+    method alert() constructor class oDlg
+    method piscavermelho()
+endclass
+
+method alert(p_titulo,p_texto) class oOlg
+    default p_titulo := ""
+    default p_texto  := ""
+    
+    self:titulo := p_titulo
+    self:texto := p_texto
+
+return self 
+
+method piscavermelho() class oDlg
+
+return self:texto
+
