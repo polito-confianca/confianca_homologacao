@@ -4,10 +4,10 @@
 		{
 			"type": "totvs_language_debug",
 			"request": "launch",
-			"name": "TOTVS Language Debug",
+			"name": "Compila_02",
 			"program": "${command:AskForProgramName}",
 			"cwb": "${workspaceFolder}",
-			"smartclientBin": "C:/TOTVS/Protheus2310/Protheus/bin/smartclient/smartclient.exe",
+			"smartclientBin": "C:/totvs/protheus/homolog/smartclient.exe",
 			"isMultiSession": true,
 			"enableTableSync": true,
 			"extendFeatures": {
@@ -63,8 +63,14 @@
 		},
 		{
 			"label": "U_zFOpen"
+		},
+		{
+			"label": "U_zTurnoInicial"
+		},
+		{
+			"label": "SIGAMDI"
 		}
 	],
-	"lastProgramExecuted": "U_zFOpen",
+	"lastProgramExecuted": "SIGAMDI",
 	"lastProgramArguments": []
 }

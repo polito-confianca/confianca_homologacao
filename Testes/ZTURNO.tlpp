@@ -2,46 +2,61 @@
     Esse programa  
     @Tipo User Function
     @Autor Pablo Polito
-    @Data de CriaÃ§Ã£o 18/04/2024
+    @Data de Criação 18/04/2024
     @VersÃ£o 1.0
     
     @Auxiliar
     (Links de Referencia)
     
-    @AlteraÃ§Ãµes
-    18/04/2024 - Pablo Polito: ConstruÃ§Ã£o Inicial do Programa
+    @Alterações
+    18/04/2024 - Pablo Polito: Construção Inicial do Programa
 /*/
     
 Function U_zTurnoInicial()
-    Local cTurno as character
-    Local aSequenciaTurno as array
     Local n as numeric
-    Local nQtdSeq as numeric
     Local cRetSeq as character 
-    
+    Local aSeqTurno as array
+    Local nQtdRegistrosTurno as numeric
+    Local lSequencia as logical
+    Local cMsg as character 
 
-    cTurno := M->RA_TNOTRAB
+    lSequencia := .F.
+    
+    If M->RA_TNOTRAB == "   "
+        FwAlertInfo("Numero de Requisição (Campo: Num. Req.) ou Turno de Trabalho não preenchidos. Para que a sequencia inicial do turno de trabalho do funcionario seja preenchida, um dos campos acima é necessário.","Informe o numero da requisição ou o Turno de Trabalho")
+        M->RA_ADMISSA := STOD("")
+        M->RA_OPCAO := STOD("")
+        Return cRetSeq
+    EndIf   
+
     aSeqTurno := array(0)
 
+    //Monta uma tabela temporaria com a sequencia de turno
     BeginSQL Alias "ZSEQUENCIATURNO"
         SELECT PJ_TURNO,PJ_SEMANA,PJ_DIA,PJ_TPDIA
         FROM %table:SPJ% SPJ
         WHERE SPJ.%notdel%
-        AND PJ_TURNO = %Exp:cTurno%
+        AND PJ_TURNO = %Exp:RA_TNOTRAB%
     EndSQL
 
-    nQtdSeq := Len(ZSEQUENCIATURNO->(dbEval({|| aadd(aSeqTurno,{PJ_SEMANA})}))) //Retorna a quantidade de registros e monta o array com todos os registros filtrados
-    
-    For n := 1 to nQtdSeq
-        If nQtdSeq == 7 //Se a quantidade de registros for igual a 7, entÃ£o sÃ³ tem 1 sequencia de 7 dias
-            cRetSeq := SPJ->PJ_SEMANA
-        ElseIf DoW(M->RA_ADMISSA) = SPJ->PJ_DIA .AND. SPJ->TPDIA == "S" //Se a data de admissÃ£o em memÃ³ria (convertida em dia da semana) for igual ao dia 
-            cRetSeq := SPJ->PJ_SEMANA
-        Else 
-            FwAlertInfo("A data de admissÃ£o/inicio da jornada de trabalho do funcionario nÃ£o coinscidi com o dia trabalhado da sequencia do turno selecionado.", "Incompatibilidade")
-        EndIf
-    Next
+    ZSEQUENCIATURNO->(dbEval({|| aadd(aSeqTurno,{PJ_SEMANA,PJ_DIA,PJ_TPDIA})})) //Retorna a quantidade de registros e monta o array com todos os registros filtrados
+    nQtdRegistrosTurno := Len(aSeqTurno)
 
-    Alert(aSequenciaTurno)
+    If Len(aSeqTurno) == 7
+        cRetSeq := aSeqTurno[n][1]
+    Else
+        For n := 1 to nQtdRegistrosTurno
+            If cValToChar(DoW(M->RA_ADMISSA)) == aSeqTurno[n][2] .AND. aSeqTurno[n][3] = "S" //Se a data de admissão em memória (convertida em dia da semana) for igual ao dia da semana da sequencia de turno posicionada e o dia for trabalhado, retorna para o gatilho a sequencia a ser utilizada 
+                cMsg := ".T."
+                cRetSeq := aSeqTurno[n][1]
+            Else
+                cMsg := ".F."
+            EndIf
+        Next
+    EndIf
+
+    If cMsg == ".F." 
+        FwAlertInfo("Não existe nenhum dia trabalhado da sequencia de turno que seja igual ao dia de inicio do funcionario", "Verifique a Data de Amissão/Ou o Turno selecionado.")
+    EndIf
 
 Return cRetSeq
