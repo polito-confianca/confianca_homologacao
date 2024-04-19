@@ -1,0 +1,46 @@
+/*/{Protheus.doc} U_CFGPEM60
+    Função disparada pelo gatilho (RA_X_NREQU[508]) que preenche o campo RA_REGRA de acordo com a 
+    filial corrente da inclusão do funcionario comparando com a filial da requisição
+    
+    @Tipo User Function
+    @Autor Pablo Polito
+    @Data de Criação 11/04/2024
+    @Versão 1.0
+    
+    @Auxiliar
+    Função StrTokArr: https://terminaldeinformacao.com/knowledgebase/strtokarr/
+    
+    @Alterações
+    11/04/2024 - Pablo Polito: Construção Inicial do Programa
+
+    @Regras
+    1 - A regra de preenchimento do campo já está contida nas posições do array do parametro MV_X_FILRA, sendo:
+                               Filial  |  Código Regra Apontamento
+    MV_X_FILRA (XXXX,XXXX,XXXX,XX      |  XX)
+/*/
+    
+Function U_REGRA() 
+    Local nRetornoGatilho as numeric
+    Local n as numeric
+    Local aParamRegra as array
+    Local cParametrosMV as character
+    Local nPosicoes as numeric
+    Local cCampo as character
+
+    cParametrosMV := GetMv("MV_X_FILRA") 
+
+    aParamRegra := StrTokArr(cParametrosMV, ',') //Vetoriza o o retorno do parametro montando as posições do vector sempre que encontrar a virgula
+    nPosicoes := Len(aParamRegra)
+
+    cCampo := Z00->Z00_HRMES
+
+    For n := 1 to nPosicoes
+        If SUBSTR(aParamRegra[n],1,2) == cFilAnt .And. cCampo == "INT" //Se a filial de inclusão for igual aos primeiros 2 digitos do array (filial) e o campo hora mensal da requisição for igual a intermitente
+            nRetornoGatilho := 90
+        Else 
+            If SUBSTR(aParamRegra[n],1,2) == cFilAnt .AND. cCampo <> "INT"
+                    nRetornoGatilho := SUBSTR(aParamRegra[n],3,2)
+            EndIf
+        EndIf
+    Next
+Return nRetornoGatilho

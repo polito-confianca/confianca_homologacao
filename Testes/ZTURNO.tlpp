@@ -1,0 +1,47 @@
+/*/{Protheus.doc} U_zTurnoInicial
+    Esse programa  
+    @Tipo User Function
+    @Autor Pablo Polito
+    @Data de Criação 18/04/2024
+    @Versão 1.0
+    
+    @Auxiliar
+    (Links de Referencia)
+    
+    @Alterações
+    18/04/2024 - Pablo Polito: Construção Inicial do Programa
+/*/
+    
+Function U_zTurnoInicial()
+    Local cTurno as character
+    Local aSequenciaTurno as array
+    Local n as numeric
+    Local nQtdSeq as numeric
+    Local cRetSeq as character 
+    
+
+    cTurno := M->RA_TNOTRAB
+    aSeqTurno := array(0)
+
+    BeginSQL Alias "ZSEQUENCIATURNO"
+        SELECT PJ_TURNO,PJ_SEMANA,PJ_DIA,PJ_TPDIA
+        FROM %table:SPJ% SPJ
+        WHERE SPJ.%notdel%
+        AND PJ_TURNO = %Exp:cTurno%
+    EndSQL
+
+    nQtdSeq := Len(ZSEQUENCIATURNO->(dbEval({|| aadd(aSeqTurno,{PJ_SEMANA})}))) //Retorna a quantidade de registros e monta o array com todos os registros filtrados
+    
+    For n := 1 to nQtdSeq
+        If nQtdSeq == 7 //Se a quantidade de registros for igual a 7, então só tem 1 sequencia de 7 dias
+            cRetSeq := SPJ->PJ_SEMANA
+        ElseIf DoW(M->RA_ADMISSA) = SPJ->PJ_DIA .AND. SPJ->TPDIA == "S" //Se a data de admissão em memória (convertida em dia da semana) for igual ao dia 
+            cRetSeq := SPJ->PJ_SEMANA
+        Else 
+            FwAlertInfo("A data de admissão/inicio da jornada de trabalho do funcionario não coinscidi com o dia trabalhado da sequencia do turno selecionado.", "Incompatibilidade")
+        EndIf
+    Next
+
+    Alert(aSequenciaTurno)
+
+Return cRetSeq

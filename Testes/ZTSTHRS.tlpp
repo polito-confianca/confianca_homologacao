@@ -1,0 +1,66 @@
+/*/{Protheus.doc} U_CFGPEM59
+    Função que preenche o campo (RA_X_BH - Cadastro de Funcionarios) quando o gatilho é 
+    disparado no campo RA_X_NREQU.
+
+    @Tipo User Function
+    @Autor Pablo Polito
+    @Data de Criação 10/04/2024
+    @Versão 1.0
+    
+    @Alterações
+    10/04/2024 - Construção Inicial do Programa
+/*/
+
+#Include "TOTVS.CH"
+#Include "TOPCONN.ch"
+
+Function U_ZTSTHRS(nTp)
+    Local nNumeroRequisicao as numeric
+    Local cQtdHrs as character
+    Local aAreaSRA as array
+    Local nRet as numeric
+
+    aAreaSRA := SRA->(FWGetArea())
+
+    //Retorna o numero foi preenchido no campo da requisição
+    nNumeroRequisicao := M->RA_X_NREQU
+
+    //Busca o numero da requisição na Z00 de acordo com o numero em memória passado no campo RA_X_NREQU
+    BeginSQL Alias "ZHRS"
+        SELECT Z00_FILIAL, Z00_X_HREX 
+        FROM %table:Z00% Z00
+        WHERE Z00.%notdel%
+        AND Z00_FILIAL = %xFilial:Z00%
+        AND Z00_CODIGO = %Exp:nNumeroRequisicao%
+    EndSQL
+
+    cQtdHrs := ZHRS->Z00_X_HREX
+    
+    ZHRS->(DbCloseArea())
+    If cQtdHrs <> " "
+        If nTp == 1 //Se for o gatilho RA_X_NREQU->RA_X_BANHR
+            Do Case 
+                Case cQtdHrs == "1" 
+                    nRet := 10
+                Case cQtdHrs == "2"
+                    nRet := 20
+                Case cQtdHrs == "3"
+                    nRet := 30
+                Case cQtdHrs == "4"
+                    nRet := 40   
+                Case cQtdHrs == "5"
+                    nRet := 50
+                Otherwise
+                    nRet := 0
+            EndCase
+        ElseIf nTp == 2 //Se for o gatilho RA_X_NREQU->RA_X_GRAT
+            If cQtdHrs == "6"
+                nRet := 40
+            Else
+                nRet := 0
+            EndIf
+        EndIf
+    EndIf
+
+    FwRestArea(aAreaSRA)
+Return nRet
