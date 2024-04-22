@@ -6,7 +6,7 @@
     @VersÃ£o 1.0
     
     @Auxiliar
-    (Links de Referencia)
+    ( Links de Referencia )
     
     @Alterações
     18/04/2024 - Pablo Polito: Construção Inicial do Programa
@@ -18,7 +18,7 @@ Function U_zTurnoInicial()
     Local aSeqTurno as array
     Local nQtdRegistrosTurno as numeric
     Local lSequencia as logical
-    Local cMsg as character 
+    Local lMsg as logical
 
     lSequencia := .F.
     
@@ -39,24 +39,26 @@ Function U_zTurnoInicial()
         AND PJ_TURNO = %Exp:RA_TNOTRAB%
     EndSQL
 
-    ZSEQUENCIATURNO->(dbEval({|| aadd(aSeqTurno,{PJ_SEMANA,PJ_DIA,PJ_TPDIA})})) //Retorna a quantidade de registros e monta o array com todos os registros filtrados
+    //Retorna a quantidade de registros e monta o array com todos os registros filtrados
+    ZSEQUENCIATURNO->(dbEval({|| aadd(aSeqTurno,{PJ_SEMANA,PJ_DIA,PJ_TPDIA})})) 
     nQtdRegistrosTurno := Len(aSeqTurno)
 
+    //Se a consulta retornar apenas 7 linhas, então existe apenas 1 sequencia de turno
     If Len(aSeqTurno) == 7
         cRetSeq := aSeqTurno[n][1]
     Else
         For n := 1 to nQtdRegistrosTurno
-            If cValToChar(DoW(M->RA_ADMISSA)) == aSeqTurno[n][2] .AND. aSeqTurno[n][3] = "S" //Se a data de admissão em memória (convertida em dia da semana) for igual ao dia da semana da sequencia de turno posicionada e o dia for trabalhado, retorna para o gatilho a sequencia a ser utilizada 
-                cMsg := ".T."
-                cRetSeq := aSeqTurno[n][1]
+            If cValToChar(DoW(M->RA_ADMISSA)) == aSeqTurno[n][2] .AND. aSeqTurno[n][3] = "S" //Se a data de admissão em memória (convertida em dia da semana) for igual ao dia da semana da sequencia de turno posicionada e o dia também for trabalhado, retorna para o gatilho a sequencia a ser utilizada 
+                lMsg := .T.
+                cRetSeq := aSeqTurno[n][1] 
+                Exit
             Else
-                cMsg := ".F."
+                lMsg := .F.//Se não atender a condição acima retorna a mensagem de que a data não confere com a sequencia de turno
             EndIf
         Next
+        If lMsg == .F.
+            FwAlertInfo("A data informada não coinscidi com a sequencia de turno do funcionario pois não existe dia de inicio trabalhado para essa data", "Verifique a Data de Amissão/Ou o Turno selecionado.")
+            Return cRetSeq
+        EndIf
     EndIf
-
-    If cMsg == ".F." 
-        FwAlertInfo("Não existe nenhum dia trabalhado da sequencia de turno que seja igual ao dia de inicio do funcionario", "Verifique a Data de Amissão/Ou o Turno selecionado.")
-    EndIf
-
 Return cRetSeq
